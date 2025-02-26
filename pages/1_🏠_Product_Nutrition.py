@@ -15,13 +15,14 @@ def load_data():
 
 def main():
     df = load_data()
+    df_sampled = df.sample(30000, random_state=42)
     
     st.title("Nutritional Analysis")
     
     # Interactive 3D Scatter Plot
     st.header("Nutritional Landscape")
     fig = px.scatter_3d(
-        df.sample(30000, random_state=42),
+        df_sampled,
         x='nutriscore_score',
         y='energy_kcal_100g',
         z='co2_total',
@@ -42,22 +43,37 @@ def main():
         zaxis=dict(title='CO2 →')
     ))
     st.plotly_chart(fig, use_container_width=True)
-    
-    # Interactive Data Grid
-    st.header("Product Explorer")
-    gb = GridOptionsBuilder.from_dataframe(df[['product_name', 'nutriscore_score', 'energy_kcal_100g']])
-    gb.configure_pagination(paginationAutoPageSize=True)
-    gb.configure_side_bar()
-    gb.configure_default_column(groupable=True, value=True, enableRowGroup=True, aggFunc='mean')
-    grid_options = gb.build()
-    
-    AgGrid(
-        df[['product_name', 'nutriscore_score', 'energy_kcal_100g']],
-        gridOptions=grid_options,
-        height=400,
-        theme='streamlit',
-        enable_enterprise_modules=False
-    )
 
+    # Section 2: Energy Content Analysis
+    st.header("Energy Content Distribution")
+    
+    kcal_range = st.slider(
+        "Select kcal range:",
+        min_value=int(df_sampled['energy_kcal_100g'].min()),
+        max_value=int(df_sampled['energy_kcal_100g'].max()),
+        value=(0, 500)
+    )
+    
+    filtered_df = df_sampled[(df_sampled['energy_kcal_100g'] >= kcal_range[0]) & 
+                              (df_sampled['energy_kcal_100g'] <= kcal_range[1])]
+    
+    fig2 = px.density_heatmap(
+        filtered_df,
+        x='energy_kcal_100g',
+        y='nutriscore_score',
+        nbinsx=50,
+        nbinsy=20,
+        color_continuous_scale='Viridis',
+        labels={
+            'energy_kcal_100g': 'Calories per 100g',
+            'nutriscore_score': 'Nutrition Score'
+        }
+    )
+    fig2.update_layout(
+        title='Relationship Between Calories and Nutrition Score',
+        xaxis_range=kcal_range
+    )
+    st.plotly_chart(fig2, use_container_width=True)
+    
 if __name__ == "__main__":
     main()
