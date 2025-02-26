@@ -10,6 +10,7 @@ def main():
     table = pq.read_table("openfoodfacts-processed.parquet")
     df = table.to_pandas()  # Convert to Pandas DataFrame
     df = df.rename(columns={'energy-kcal_100g': 'energy_kcal_100g'})
+    df = df[df['energy_kcal_100g'].notna()]
     df = df.dropna(subset=['environmental_score_score', 'co2_total'])
     
     st.title("Environmental Impact Analysis")
