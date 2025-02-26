@@ -22,10 +22,65 @@ def main():
     
     st.title("Nutritional Analysis")
     
-    # Interactive 3D Scatter Plot
-    st.header("Nutritional Landscape")
+    # --------------------------
+    #  Sliders for Each Numeric Column
+    # --------------------------
+    # Nutriscore
+    min_nutri = int(df_sampled['nutriscore_score'].min())
+    max_nutri = int(df_sampled['nutriscore_score'].max())
+    selected_nutri = st.slider(
+        "Select Nutriscore Range:",
+        min_value=min_nutri,
+        max_value=max_nutri,
+        value=(min_nutri, max_nutri)
+    )
+
+    # Environmental Score
+    min_env = int(df_sampled['environmental_score_score'].min())
+    max_env = int(df_sampled['environmental_score_score'].max())
+    selected_env = st.slider(
+        "Select Environmental Score Range:",
+        min_value=min_env,
+        max_value=max_env,
+        value=(min_env, max_env)
+    )
+
+    # Energy (kcal/100g)
+    min_cal = int(df_sampled['energy_kcal_100g'].min())
+    max_cal = int(df_sampled['energy_kcal_100g'].max())
+    selected_cal = st.slider(
+        "Select Calories Range:",
+        min_value=min_cal,
+        max_value=max_cal,
+        value=(min_cal, max_cal)
+    )
+
+    # CO2 Total
+    min_co2 = int(df_sampled['co2_total'].min())
+    max_co2 = int(df_sampled['co2_total'].max())
+    selected_co2 = st.slider(
+        "Select CO2 Range:",
+        min_value=min_co2,
+        max_value=max_co2,
+        value=(min_co2, max_co2)
+    )
+
+    # --------------------------
+    #  Filter the DataFrame
+    # --------------------------
+    filtered_df = df_sampled[
+        (df_sampled['nutriscore_score'].between(selected_nutri[0], selected_nutri[1])) &
+        (df_sampled['environmental_score_score'].between(selected_env[0], selected_env[1])) &
+        (df_sampled['energy_kcal_100g'].between(selected_cal[0], selected_cal[1])) &
+        (df_sampled['co2_total'].between(selected_co2[0], selected_co2[1]))
+    ]
+
+    # --------------------------
+    #  Plot 3D Scatter with Filters
+    # --------------------------
+    st.header("Nutritional Landscape (Filtered)")
     fig = px.scatter_3d(
-        df_sampled,
+        filtered_df,
         x='nutriscore_score',
         y='energy_kcal_100g',
         z='co2_total',
@@ -40,13 +95,14 @@ def main():
         color_continuous_scale='Portland',
         title='3D Nutritional Landscape'
     )
-    fig.update_layout(scene=dict(
-        xaxis=dict(title='Nutrition ↑', autorange="reversed"),
-        yaxis=dict(title='Calories →'),
-        zaxis=dict(title='CO2 →')
-    ))
+    fig.update_layout(
+        scene=dict(
+            xaxis=dict(title='Nutrition ↑', autorange="reversed"),
+            yaxis=dict(title='Calories →'),
+            zaxis=dict(title='CO2 →')
+        )
+    )
     st.plotly_chart(fig, use_container_width=True)
-
     # Section 2: Energy Content Analysis
     st.header("Energy Content Distribution")
     
