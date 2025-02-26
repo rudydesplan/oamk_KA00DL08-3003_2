@@ -3,6 +3,7 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import pyarrow.parquet as pq
+import matplotlib.pyplot as plt
 from st_aggrid import AgGrid, GridOptionsBuilder
 
 @st.cache_data
@@ -57,23 +58,21 @@ def main():
     filtered_df = df_sampled[(df_sampled['energy_kcal_100g'] >= kcal_range[0]) & 
                               (df_sampled['energy_kcal_100g'] <= kcal_range[1])]
     
-    fig2 = px.density_hexbin(
-        filtered_df,
-        x='energy_kcal_100g',
-        y='nutriscore_score',
-        nbinsx=50,
-        nbinsy=20,
-        color_continuous_scale='Viridis',
-        labels={
-            'energy_kcal_100g': 'Calories per 100g',
-            'nutriscore_score': 'Nutrition Score'
-        }
+    fig, ax = plt.subplots(figsize=(8, 6))
+    hb = ax.hexbin(
+        filtered_df['energy_kcal_100g'], 
+        filtered_df['nutriscore_score'], 
+        gridsize=50, 
+        cmap='viridis', 
+        mincnt=1
     )
-    fig2.update_layout(
-        title='Relationship Between Calories and Nutrition Score',
-        xaxis_range=kcal_range
-    )
-    st.plotly_chart(fig2, use_container_width=True)
+    ax.set_xlabel("Calories per 100g")
+    ax.set_ylabel("Nutrition Score")
+    ax.set_title("Relationship Between Calories and Nutrition Score")
+    cb = fig.colorbar(hb, ax=ax)
+    cb.set_label("Count")
+    
+    st.pyplot(fig)
     
 if __name__ == "__main__":
     main()
