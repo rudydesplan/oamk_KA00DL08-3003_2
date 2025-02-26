@@ -1,4 +1,3 @@
-# pages/2_🌍_Environmental_Impact.py
 import streamlit as st
 import pandas as pd
 import plotly.express as px
@@ -6,19 +5,28 @@ import pyarrow.parquet as pq
 from streamlit_plotly_events import plotly_events
 from streamlit_extras.metric_cards import style_metric_cards
 
-def main():
+@st.cache_data
+def load_data():
     table = pq.read_table("openfoodfacts-processed.parquet")
     df = table.to_pandas()  # Convert to Pandas DataFrame
     df = df.rename(columns={'energy-kcal_100g': 'energy_kcal_100g'})
-    df = df[df['energy_kcal_100g'].notna()]
-    df = df.dropna(subset=['environmental_score_score', 'co2_total'])
+    # Drop rows with NaN values in relevant columns
+    df = df.dropna(subset=['environmental_score_score', 'co2_total', 'energy_kcal_100g'])
+    return df
+
+def main():
+    df = load_data()
     
     st.title("Environmental Impact Analysis")
     
     # Interactive Scatter Plot with Selection
     st.header("Product Impact Explorer")
+    
+    # Ensure energy_kcal_100g has no NaN values
+    df = df[df['energy_kcal_100g'].notna()]
+    
     fig = px.scatter(
-        df.sample(10000),
+        df,  # Sample for better performance
         x='environmental_score_score',
         y='co2_total',
         color='nutriscore_score',
