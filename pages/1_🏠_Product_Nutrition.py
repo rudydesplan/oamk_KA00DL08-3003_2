@@ -57,7 +57,7 @@ def main():
     filtered_df = df_sampled[(df_sampled['energy_kcal_100g'] >= kcal_range[0]) & 
                               (df_sampled['energy_kcal_100g'] <= kcal_range[1])]
     
-    fig2 = px.density_heatmap(
+    fig2 = px.density_hexbin(
         filtered_df,
         x='energy_kcal_100g',
         y='nutriscore_score',
