@@ -10,7 +10,7 @@ def load_data():
     table = pq.read_table("openfoodfacts-processed.parquet")
     df = table.to_pandas()  # Convert to Pandas DataFrame
     df = df.rename(columns={'energy-kcal_100g': 'energy_kcal_100g'})
-    return df.dropna(subset=['environmental_score_score', 'co2_total'])
+    return df.dropna(subset=['environmental_score_score', 'co2_total','energy_kcal_100g'])
 
 def main():
     df = load_data()
