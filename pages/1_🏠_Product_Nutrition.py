@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
 import seaborn as sns 
 from st_aggrid import AgGrid, GridOptionsBuilder
+import config
 
 @st.cache_data
 def load_data():
@@ -99,7 +100,7 @@ def main():
             'co2_total': 'CO2 Emissions',
             'environmental_score_score': 'Env. Impact'
         },
-        color_continuous_scale='Portland',
+        color_continuous_scale=config.COLOR_SCALE,
         title='3D Nutritional Landscape'
     )
     fig.update_layout(
