@@ -74,9 +74,9 @@ def main():
     )
 
     with st.expander("⚙️ Active Filters"):
-    st.write(f"Nutrition: {selected_nutri[0]}–{selected_nutri[1]}")
-    st.write(f"Calories: {selected_cal[0]}–{selected_cal[1]} kcal")
-    st.write(f"CO2: {selected_co2[0]}–{selected_co2[1]}g")
+        st.write(f"Nutrition: {selected_nutri[0]}–{selected_nutri[1]}")
+        st.write(f"Calories: {selected_cal[0]}–{selected_cal[1]} kcal")
+        st.write(f"CO2: {selected_co2[0]}–{selected_co2[1]}g")
     
     # --------------------------
     #  Filter the DataFrame
