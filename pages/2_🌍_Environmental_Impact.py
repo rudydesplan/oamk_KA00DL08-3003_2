@@ -16,7 +16,13 @@ def main():
     df = load_data()
     
     st.title("Environmental Impact Analysis")
-    st.markdown("Analyze the environmental footprint of food products")
+    
+    st.subheader("Reading Environmental Scores")
+    st.markdown("""
+    - 🌱 **Lower environmental scores** are better (0-100 scale)
+    - CO2 emissions are measured per 100g of product
+    - Hover over bubbles to see product details
+    """)
     
     # Section 1: Environmental Impact vs CO2
     st.header("Environmental Impact vs Carbon Footprint")
