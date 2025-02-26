@@ -21,7 +21,7 @@ def main():
     # Interactive 3D Scatter Plot
     st.header("Nutritional Landscape")
     fig = px.scatter_3d(
-        df.sample(10000),
+        df,
         x='nutriscore_score',
         y='energy_kcal_100g',
         z='co2_total',
