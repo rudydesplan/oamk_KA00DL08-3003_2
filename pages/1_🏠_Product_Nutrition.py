@@ -21,6 +21,13 @@ def main():
     df_sampled = df.sample(30000, random_state=42)
     
     st.title("Nutritional Analysis")
+
+    st.subheader("Understanding Nutrition Scores")
+    st.markdown("""
+    - 🟢 **Higher nutrition scores** mean healthier products  
+    - 🔴 **Lower scores** indicate less nutritional value  
+    - Compare calories vs nutrition - the ideal quadrant is **top-left** (high nutrition, low calories)
+    """)
     
     # --------------------------
     #  Sliders for Each Numeric Column
