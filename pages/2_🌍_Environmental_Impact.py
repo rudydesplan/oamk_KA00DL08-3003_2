@@ -47,8 +47,12 @@ def main():
     # Section 2: Top CO2 Emitters
     st.header("Highest CO2 Emission Products")
     
-    top_co2 = df.nlargest(20, 'co2_total')[['product_name', 'co2_total', 'environmental_score_score']]
-    top_co2 = top_co2.sort_values('co2_total', ascending=True)
+    top_co2 = (
+    df.groupby("product_name", as_index=False)
+    .agg({"co2_total": "sum", "environmental_score_score": "mean"})
+    )
+    
+    top_co2 = top_co2.nlargest(20, "co2_total").sort_values("co2_total", ascending=True)
     
     fig2 = go.Figure(go.Bar(
         x=top_co2['co2_total'],
@@ -70,8 +74,6 @@ def main():
     # Key Insights
     st.markdown("""
     ## Key Insights
-    - Products with higher environmental scores (worse) tend to have higher CO2 emissions
-    - High-calorie products often correlate with higher environmental impact
     - Meat and dairy products typically appear in top CO2 emitters
     """)
 
