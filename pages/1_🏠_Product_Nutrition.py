@@ -4,6 +4,7 @@ import pandas as pd
 import plotly.express as px
 import pyarrow.parquet as pq
 import matplotlib.pyplot as plt
+import seaborn as sns 
 from st_aggrid import AgGrid, GridOptionsBuilder
 
 @st.cache_data
@@ -59,19 +60,22 @@ def main():
                               (df_sampled['energy_kcal_100g'] <= kcal_range[1])]
     
     fig, ax = plt.subplots(figsize=(8, 6))
-    hb = ax.hexbin(
+    # norm=mcolors.LogNorm() applies a log scale on bin counts
+    h = ax.hist2d(
         filtered_df['energy_kcal_100g'], 
-        filtered_df['nutriscore_score'], 
-        gridsize=50, 
-        cmap='viridis', 
-        mincnt=1
+        filtered_df['nutriscore_score'],
+        bins=(50, 50),
+        cmap='viridis',
+        norm=mcolors.LogNorm()
     )
-    ax.set_xlabel("Calories per 100g")
-    ax.set_ylabel("Nutrition Score")
-    ax.set_title("Relationship Between Calories and Nutrition Score")
-    cb = fig.colorbar(hb, ax=ax)
-    cb.set_label("Count")
     
+    # Add color bar
+    cbar = plt.colorbar(h[3], ax=ax)
+    cbar.set_label('Count (log scale)')
+    
+    ax.set_xlabel('Calories per 100g')
+    ax.set_ylabel('Nutrition Score')
+    ax.set_title('2D Histogram (Log-Scaled) of Calories vs Nutrition Score')
     st.pyplot(fig)
     
 if __name__ == "__main__":
