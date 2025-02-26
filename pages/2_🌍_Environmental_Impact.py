@@ -4,6 +4,7 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 import pyarrow.parquet as pq
+import config
 
 @st.cache_data
 def load_data():
@@ -40,7 +41,7 @@ def main():
             'nutriscore_score': 'Nutrition Score',
             'energy_kcal_100g': 'Calories'
         },
-        color_continuous_scale='RdYlGn',
+        color_continuous_scale=config.ENV_COLORS,
         title='Environmental Impact vs CO2 Emissions'
     )
     fig.update_layout(
