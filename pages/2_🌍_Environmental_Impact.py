@@ -22,7 +22,7 @@ def main():
     st.header("Environmental Impact vs Carbon Footprint")
     
     fig = px.scatter(
-        df,  # Sample for better performance
+        df.sample(30000, random_state=42),  # Sample for better performance
         x='environmental_score_score',
         y='co2_total',
         color='nutriscore_score',
