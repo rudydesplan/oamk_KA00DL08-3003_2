@@ -49,7 +49,7 @@ def main():
     
     top_co2 = (
     df.groupby("product_name", as_index=False)
-    .agg({"co2_total": "sum", "environmental_score_score": "mean"})
+    .agg({"co2_total": "mean", "environmental_score_score": "mean"})
     )
     
     top_co2 = top_co2.nlargest(20, "co2_total").sort_values("co2_total", ascending=True)
