@@ -103,8 +103,9 @@ def main():
         )
     )
     st.plotly_chart(fig, use_container_width=True)
+    
     # Section 2: Energy Content Analysis
-    st.header("Energy Content Distribution")
+    st.header("Calories vs. Nutrition Score (Log-Scaled 2D Histogram)")
     
     kcal_range = st.slider(
         "Select kcal range:",
